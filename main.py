@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 fh = open("config.yaml")
-data = yaml.load(fh)
+data = yaml.load(fh, Loader=yaml.CLoader)
 
 @app.route('/pollwatcher', methods=['POST'])
 def watcher():
@@ -30,6 +30,13 @@ def watcher():
     return {
       "message": "Method not supported."
     }
+
+# NEW function
+@app.route('/pollreporter', methods=['POST'])
+def reporter():
+  if request.method == 'POST':
+    print(request.json)
+
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', debug = True)
