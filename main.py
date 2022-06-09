@@ -36,6 +36,7 @@ def watcher():
 def reporter():
   if request.method == 'POST':
     print(request.json)
+    return "OK"
 
 
 if __name__ == '__main__':
