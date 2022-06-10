@@ -1,7 +1,9 @@
-import shelve
 import yaml
+import json
 
 from flask import Flask, jsonify, request
+import couchsurf
+
 
 app = Flask(__name__)
 
@@ -11,32 +13,24 @@ data = yaml.load(fh, Loader=yaml.CLoader)
 @app.route('/pollwatcher', methods=['POST'])
 def watcher():
   if request.method == 'POST':
-
-    polls = shelve.open(data["POLL_DB"])
-    poll = next(iter(polls))
-
+    poll = json.loads(couchsurf.get_request())
     user = request.json["user"]
-
     payload = {
-      "message": f"{user}, {polls[poll]['question']}",
-      "votes": polls[poll]["options"]
+      "message": f'{user}, {poll["rows"][0]["key"]["question"]}',
+      "votes": poll["rows"][0]["key"]["options"]
     }
-
-    polls.close()
-
     return jsonify(payload)
-
   else:
-    return {
-      "message": "Method not supported."
-    }
+    return {"message": "Method not supported."}
 
-# NEW function
 @app.route('/pollreporter', methods=['POST'])
 def reporter():
   if request.method == 'POST':
-    print(request.json)
+    couchsurf.post_request(request.json)
     return "OK"
+  else:
+    return {"message": "Method not supported."}
+    
 
 
 if __name__ == '__main__':
