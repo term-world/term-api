@@ -8,12 +8,16 @@ CONFIG = dotenv_values('.env')
 HEADERS = {
     'accept': 'application/json',
     'content-type': 'application/json',
-    'referer': 'https://fauxton.cdr.theterm.world'
+    'referer': f'https://{CONFIG["GOVERNOR_HOST"]}'
 }
 
-def get_request(view_path="/_design/latest/_view/latest-poll"):
-    response = requests.get(f'https://{CONFIG["GOVERNOR_URI"]}{view_path}',
-    headers=HEADERS,
+def get_request(view_path="latest-poll",**kwargs):
+    response = requests.get(
+        f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}',
+        headers=HEADERS,
+        params=json.dumps({
+            "keys":[value for value in kwargs.values()]
+        })
     )
     return response.text
 
