@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.8"

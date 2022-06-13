@@ -1,1 +1,1 @@
-POLL_DB: "/opt/governance/polls"
+POLL_DB: "../poll"
