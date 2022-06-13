@@ -13,8 +13,9 @@ def watcher():
     if not rollcall(user):
       poll = json.loads(couchsurf.get_request())
       payload = {
-        "message": f'{user}, {poll["rows"][0]["key"]["question"]}',
-        "votes": poll["rows"][0]["key"]["options"]
+        "message": f'{user}, {poll["rows"][-1]["value"]["question"]}',
+        "votes": poll["rows"][-1]["value"]["options"],
+        "id": poll["rows"][-1]["id"]
       }
       return jsonify(payload)
     return jsonify({})
@@ -30,17 +31,18 @@ def reporter():
     return {"message": "Method not supported."}
 
 def rollcall(username):
-  if request.method == 'POST':
-    response = couchsurf.get_request(
-      'user-finder',
-      user=username
-    )
-    status = json.loads(response)
-    if status["total_rows"] > 0:
-      return True
-    return False
-  else:
-    return {"message":"Method not supported."}
+  #if request.method == 'POST':
+    #response = couchsurf.get_request(
+      #'user-finder',
+      #user=username
+    #)
+    #status = json.loads(response)
+    #if status["total_rows"] > 0:
+      #return True
+    #return False
+  #else:
+    #return {"message":"Method not supported."}
+  return False #DELETE THIS ONCE FIXED!
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', debug = True)
