@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 
@@ -15,17 +16,29 @@ def get_request(view_path="latest-poll",**kwargs):
     response = requests.get(
         f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}',
         headers=HEADERS,
+        # Might be optional
         params=json.dumps({
-            "keys":[value for value in kwargs.values()]
+            "key":[value for value in kwargs.values()]
         })
     )
     return response.text
 
-def post_request(doc):
+def query_request(**kwargs):
+    query = {
+        "selector":{
+            "user": {
+                "$regex":",".join([re.escape(value) for value in kwargs.values()])
+            }
+        }
+    }
+    result = post_request(query, "_find")
+    return result
+
+def post_request(doc, op=""):
     response = requests.post(
-        f'https://{CONFIG["GOVERNOR_URI"]}',
+        f'https://{CONFIG["GOVERNOR_URI"]}/{op}',
         headers=HEADERS,
         data=json.dumps(doc)
     )
     confirmation = json.loads(response.text)
-    print(f'A new doc has been posted at id: {confirmation["id"]}')
+    return confirmation

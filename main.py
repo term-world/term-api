@@ -31,18 +31,13 @@ def reporter():
     return {"message": "Method not supported."}
 
 def rollcall(username):
-  #if request.method == 'POST':
-    #response = couchsurf.get_request(
-      #'user-finder',
-      #user=username
-    #)
-    #status = json.loads(response)
-    #if status["total_rows"] > 0:
-      #return True
-    #return False
-  #else:
-    #return {"message":"Method not supported."}
-  return False #DELETE THIS ONCE FIXED!
+  response = couchsurf.query_request(
+    user=username
+  )
+  print(response)
+  if len(response['docs']):
+    return False
+  return True
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', debug = True)
