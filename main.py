@@ -48,9 +48,13 @@ def rollcall(username):
   return True
 
 def rollcall2(id, username):
-  votes_to_search = couchsurf.get_request("vote-finder", id)
-  print(votes_to_search)
-  return False #delete
+  request_result = json.loads(couchsurf.get_request("vote-finder", id))
+  votes_to_search = request_result["rows"]
+  didja_vote = False
+  for vote in votes_to_search:
+    if vote["value"] == username:
+      didja_vote = True
+  return didja_vote
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', debug = True)
