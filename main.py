@@ -10,7 +10,9 @@ app = Flask(__name__)
 def watcher():
   if request.method == 'POST':
     user = request.json["user"]
-    request_result = json.loads(couchsurf.get_request())
+    request_result = json.loads(
+      couchsurf.get_request(view_path="latest-poll")
+    )
     all_polls = request_result["rows"]
     poll_found = False
     for poll in all_polls:
@@ -40,7 +42,12 @@ def reporter():
 
 
 def rollcall(id, username):
-  request_result = json.loads(couchsurf.get_request("vote-finder", id))
+  request_result = json.loads(
+    couchsurf.get_request(
+      view_path="vote-finder", 
+      id=id
+    )
+  )
   votes_to_search = request_result["rows"]
   didja_vote = False
   for vote in votes_to_search:

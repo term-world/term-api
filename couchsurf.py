@@ -1,6 +1,5 @@
 import re
 import json
-from wsgiref.headers import Headers
 import requests
 
 from dotenv import dotenv_values
@@ -13,17 +12,17 @@ HEADERS = {
     'referer': f'https://{CONFIG["GOVERNOR_HOST"]}'
 }
 
-def get_request(view_path="latest-poll", search_key=""):
-    if not search_key:
-        response = requests.get(
-            f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}',
-            headers = HEADERS
-        )
-    else:
-        response = requests.get(
-            f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}?key="{search_key}"',
-            headers = HEADERS
-        )
+def get_request(view_path="latest-poll", **kwargs):
+    params = None
+    if kwargs:
+        params = {
+            "keys": json.dumps([value for value in kwargs.values()])
+        }
+    response = requests.get(
+        f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}',
+        headers = HEADERS,
+        params = params
+    )
     return response.text
 
 def query_request(**kwargs):
