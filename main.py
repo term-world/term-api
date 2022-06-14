@@ -14,7 +14,7 @@ def watcher():
     all_polls = request_result["rows"]
     poll_found = False
     for poll in all_polls:
-      if not rollcall2(poll["id"], user):
+      if not rollcall(poll["id"], user):
         selected_poll = poll
         poll_found = True
         break
@@ -38,16 +38,8 @@ def reporter():
   else:
     return {"message": "Method not supported."}
 
-def rollcall(username):
-  response = couchsurf.query_request(
-    user=username
-  )
-  print(response)
-  if len(response['docs']):
-    return False
-  return True
 
-def rollcall2(id, username):
+def rollcall(id, username):
   request_result = json.loads(couchsurf.get_request("vote-finder", id))
   votes_to_search = request_result["rows"]
   didja_vote = False
