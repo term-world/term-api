@@ -48,7 +48,7 @@ def rollcall(username):
   return True
 
 def rollcall2(id, username):
-  votes_to_search = couchsurf.get_request("vote-finder", poll_id=id)
+  votes_to_search = couchsurf.get_request("vote-finder", id)
   print(votes_to_search)
   return False #delete
 

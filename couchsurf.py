@@ -13,15 +13,15 @@ HEADERS = {
     'referer': f'https://{CONFIG["GOVERNOR_HOST"]}'
 }
 
-def get_request(view_path="latest-poll", search_term=""):
-    if not search_term:
+def get_request(view_path="latest-poll", search_key=""):
+    if not search_key:
         response = requests.get(
             f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}',
             headers = HEADERS
         )
     else:
         response = requests.get(
-            f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}?key={search_term}',
+            f'https://{CONFIG["GOVERNOR_URI"]}/_design/latest/_view/{view_path}?key="{search_key}"',
             headers = HEADERS
         )
     return response.text
