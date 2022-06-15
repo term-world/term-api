@@ -10,15 +10,16 @@ if question:
         options.append(option)
     scope = input("Enter a neighborhood to conduct poll in, or leave field blank to conduct poll globally: ").lower()
     if not scope: scope = "global"
-    active_days = float(input("How many days would you like to keep the poll active for? "))
-    confirmation = input(f"Are you sure you'd like to submit the polling question '{question}' with possible options {options} to the '{scope}' community for {active_days} days? [y/n] ")
+    #active_days = float(input("How many days would you like to keep the poll active for? "))
+    confirmation = input(f"Are you sure you'd like to submit the polling question '{question}' with possible options {options} to the '{scope}' community? [y/n] ").lower()
     if confirmation == "y":
         poll = {
             'type': "poll",
+            'flag': "active",
             'submission_time': str(datetime.now()),
-            'active_period': f"{active_days} days",
-            'timestamp': datetime.now().timestamp(),
-            'expiry': datetime.now().timestamp() + (active_days * 86400),
+            #'active_period': f"{active_days} days",
+            'submission_timestamp': datetime.now().timestamp(),
+            #'expiry': datetime.now().timestamp() + (active_days * 86400),
             'question': question,
             'options': options,
             'scope': scope

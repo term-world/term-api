@@ -44,7 +44,7 @@ def reporter():
 def rollcall(id, username):
   request_result = json.loads(
     couchsurf.get_request(
-      view_path="vote-finder", 
+      view_path="rollcall", 
       id=id
     )
   )

@@ -44,3 +44,12 @@ def post_request(doc, op=""):
     )
     confirmation = json.loads(response.text)
     return confirmation
+
+def put_request(doc_id, updated_doc):
+    response = requests.put(
+        f'https://{CONFIG["GOVERNOR_URI"]}/{doc_id}',
+        headers=HEADERS,
+        data=json.dumps(updated_doc)
+    )
+    confirmation = json.loads(response.text)
+    return confirmation
