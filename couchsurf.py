@@ -26,12 +26,27 @@ def get_request(view_path="latest-poll", **kwargs):
     return response.text
 
 def query_request(**kwargs):
-    query = {
-        "selector":{
-            "user": {
-                "$regex":",".join([re.escape(value) for value in kwargs.values()])
-            }
+    """
+        Example:
+        couchsurf.query_request(
+            time={"op":"LESS THAN","arg":now},
+            name={"op":"LIKE","arg":"gwiz"}
+        )
+    """
+    operators = {
+        "LESS THAN": "$lt",
+        "GREATER THAN": "$gt",
+        "EQUALS":"$eq",
+        "LIKE": "$regex"
+    }
+    for param in kwargs:
+        op = kwargs[param]["op"]
+        arg = kwargs[param]["arg"]
+        kwargs[param] = {
+            operators[op]:arg
         }
+    query = {
+        "selector":kwargs
     }
     result = post_request(query, "_find")
     return result
