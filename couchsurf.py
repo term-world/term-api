@@ -29,8 +29,8 @@ def query_request(**kwargs):
     """
         Example:
         couchsurf.query_request(
-            time={"op":"LESS THAN","arg":now},
-            name={"op":"LIKE","arg":"gwiz"}
+            scope={"op":"EQUALS", "arg":"global"},
+            flag ={"op":"EQUALS", "arg":"active"}
         )
     """
     operators = {
