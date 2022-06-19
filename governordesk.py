@@ -16,8 +16,9 @@ def startup_menu():
     startup_menu_options = {
         0: "Generate a poll",
         1: "Close a poll",
-        2: "View poll results",
-        3: "Calmly step away from the talking desk"
+        2: "View latest poll results",
+        3: "Search for specific poll results",
+        4: "Calmly step away from the talking desk"
     }
     user_choice = display_menu(startup_menu_prompt, startup_menu_options)
     print()
@@ -26,8 +27,10 @@ def startup_menu():
     elif user_choice == 1:
         close_poll()
     elif user_choice == 2:
-        result_lookup()
+        recent_result_lookup()
     elif user_choice == 3:
+        result_keyword_search()
+    elif user_choice == 4:
         print("Take care, gov'nor!")
 
 def generate_poll():
@@ -128,12 +131,10 @@ def close_poll():
     else:
         print("Guess we won't be doing that, gov'nor...")
 
-def result_lookup():
+def recent_result_lookup():
     closed_poll_request = json.loads(couchsurf.get_request("poll-result-viewer"))
     closed_polls = closed_poll_request["rows"]
-    print("Alright then, gov'nor--let's dig up some poll results...")
-    print()
-    print("Here's what I've got on top o' the stack--the last ten polls closed:")
+    print("Alright then, gov. Here's what I've got on top o' the stack--the last ten polls closed:")
     print()
     for i in range(10):
         if i < len(closed_polls):
@@ -153,7 +154,34 @@ def result_lookup():
         print("Very well then! Take care, gov'nor!")
     elif finished == "n":
         print()
-        print("Very well! Time to roll up our sleeves, gov'nor!")
+        print("In that case, let's search for some specific poll results...")
+        print()
+        result_keyword_search()
+
+def result_keyword_search():
+    search_term = input("Enter a keyword to search poll results by: ")
+    search_dict = {"op": "LIKE", "arg": search_term}
+    active_flag_dict =  {"op": "EQUALS", "arg": "inactive"}
+    query_result = couchsurf.query_request(question=search_dict, flag=active_flag_dict)
+    polls_found = query_result['docs']
+    if len(polls_found) > 0:
+        print()
+        for poll in polls_found:
+            print(f"    Polling question: {poll['question']}")
+            print(f"    Polling outcome: {poll['outcome']}")
+            print()
+        print("Those are all the polls I found related to that keyword, gov'nor.")
+        print()
+        search_again = input("Would you like to take another look through my drawers, gov? [y/n] ").lower()
+        if search_again == "y":
+            print()
+            result_keyword_search()
+        else:
+            print()
+            print("Ta-ta then, gov'nor!")
+    else:
+        print()
+        print("Sorry, gov--I can't find any closed polls along those lines.")
 
 
 def main():
