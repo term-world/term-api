@@ -42,8 +42,9 @@ def query_request(**kwargs):
     for param in kwargs:
         op = kwargs[param]["op"]
         arg = kwargs[param]["arg"]
+        if op == "LIKE": arg = f"(*UTF8)(?i){arg}"
         kwargs[param] = {
-            operators[op]:arg
+            operators[op]:f"{arg}"
         }
     query = {
         "selector":kwargs
